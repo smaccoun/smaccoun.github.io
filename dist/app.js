@@ -31467,6 +31467,9 @@ module.exports = {
 "use strict";
 
 var CSS = __webpack_require__(348);
+var CSS_Common = __webpack_require__(339);
+var CSS_Display = __webpack_require__(351);
+var CSS_Flexbox = __webpack_require__(353);
 var CSS_Font = __webpack_require__(354);
 var CSS_Geometry = __webpack_require__(347);
 var CSS_Property = __webpack_require__(327);
@@ -31507,6 +31510,9 @@ var ToggleState = (function () {
     };
     return ToggleState;
 })();
+var vhS = function (i) {
+    return CSS_Size.vh(Data_Int.toNumber(i));
+};
 var style = (function () {
     var toString = function ($13) {
         return Data_String.joinWith("; ")(Data_StrMap.foldMap(Data_Monoid.monoidArray)(function (key) {
@@ -31532,11 +31538,11 @@ var style = (function () {
         return Halogen_HTML_Properties.attr("style")(toString(rules(CSS_Stylesheet.runS($15))));
     };
 })();
+var pxS = function (i) {
+    return CSS_Size.px(Data_Int.toNumber(i));
+};
 var personalLinkIcon = function (v) {
-    var pxS = function (i) {
-        return CSS_Size.px(Data_Int.toNumber(i));
-    };
-    return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(v.srcUrl), style(CSS_Geometry.paddingLeft(pxS(10))) ])([ Halogen_HTML_Elements.i([ Halogen_HTML_Properties.class_(v["className'"]), style(CSS_Font.fontSize(pxS(50))) ])([  ]) ]);
+    return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(v.srcUrl), style(CSS_Geometry.margin(pxS(0))(pxS(10))(pxS(0))(pxS(10))) ])([ Halogen_HTML_Elements.i([ Halogen_HTML_Properties.class_(v["className'"]), style(CSS_Font.fontSize(pxS(50))) ])([  ]) ]);
 };
 var linkedinIcon = {
     srcUrl: "https://www.linkedin.com/in/steven-maccoun-b4448b38/",
@@ -31548,15 +31554,30 @@ var githubLinkIcon = {
     displayText: "Github",
     "className'": "fa fa-github"
 };
+var viewPersonalLinks = Halogen_HTML_Elements.div([ style(Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Display.display(CSS_Display.flex))(function () {
+    return CSS_Flexbox.justifyContent(CSS_Flexbox.spaceBetween(CSS_Flexbox.spaceBetweenJustifyContentValue));
+})) ])([ personalLinkIcon(linkedinIcon), personalLinkIcon(githubLinkIcon) ]);
 var component = (function () {
     var render = function (state) {
-        return Halogen_HTML_Elements.div_([ Halogen_HTML_Elements.div([ Halogen_HTML_Events.onClick(Halogen_HTML_Events.input_(ToggleState.create)) ])([ (function () {
+        return Halogen_HTML_Elements.div([ style(Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Display.display(CSS_Display.flex))(function () {
+            return Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Flexbox.justifyContent(CSS_Common.center(CSS_Flexbox.centerJustifyContentValue)))(function () {
+                return Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Flexbox.alignItems(CSS_Common.center(CSS_Flexbox.centerAlignItemsValue)))(function () {
+                    return Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Flexbox.flexDirection(CSS_Flexbox.column))(function () {
+                        return CSS_Geometry.height(vhS(60));
+                    });
+                });
+            });
+        })) ])([ Halogen_HTML_Elements.div([ Halogen_HTML_Events.onClick(Halogen_HTML_Events.input_(ToggleState.create)), style(Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Display.display(CSS_Display.flex))(function () {
+            return Control_Bind.discard(Control_Bind.discardUnit)(CSS_Stylesheet.bindStyleM)(CSS_Flexbox.justifyContent(CSS_Common.center(CSS_Flexbox.centerJustifyContentValue)))(function () {
+                return CSS_Flexbox.flexDirection(CSS_Flexbox.column);
+            });
+        })) ])([ (function () {
             var $10 = !state.on;
             if ($10) {
                 return Halogen_HTML_Elements.h1_([ Halogen_HTML_Core.text("Welcome!") ]);
             };
             return Halogen_HTML_Elements.img([ Halogen_HTML_Properties.src("../images/raccoon-icon.png") ]);
-        })() ]), personalLinkIcon(linkedinIcon), personalLinkIcon(githubLinkIcon) ]);
+        })(), viewPersonalLinks ]) ]);
     };
     var initialState = {
         on: false
@@ -31582,7 +31603,10 @@ module.exports = {
     component: component,
     githubLinkIcon: githubLinkIcon,
     linkedinIcon: linkedinIcon,
+    viewPersonalLinks: viewPersonalLinks,
     personalLinkIcon: personalLinkIcon,
+    pxS: pxS,
+    vhS: vhS,
     style: style
 };
 
