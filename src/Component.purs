@@ -14,7 +14,7 @@ import Data.Tuple (Tuple(..))
 import CSS.Property (Key, Value)
 import CSS.Render (collect)
 import CSS.Stylesheet (CSS, Rule(..), runS)
-import CSS (paddingLeft, px)
+import CSS (paddingLeft, px, fontSize)
 
 import Halogen as H
 import Halogen.HTML as HH
@@ -48,10 +48,8 @@ component =
               then (HH.h1_ [HH.text "Welcome!"])
               else (HH.img [HP.src "../images/raccoon-icon.png"])
           ]
-      , HH.a
-          [ HP.href "https://www.linkedin.com/in/steven-maccoun-b4448b38/" ]
-          [ HH.text "Linkedin"]
-      , personalLinkView "https://github.com/smaccoun" "Github"
+      , personalLinkIcon linkedinIcon
+      , personalLinkIcon githubLinkIcon
 
       ]
 
@@ -62,11 +60,37 @@ component =
       pure next
 
 
-personalLinkView :: forall t3 t4. String -> String -> HH.HTML t4 t3 
-personalLinkView srcUrl displayText = 
-   HH.a
-    [ HP.href srcUrl, style do paddingLeft (px $ toNumber 10) ]
-    [ HH.text displayText]
+type PersonalLinkIcon = 
+    { srcUrl :: String
+    , displayText :: String
+    , className' :: String  
+    }
+
+githubLinkIcon :: PersonalLinkIcon
+githubLinkIcon = 
+    { srcUrl : "https://github.com/smaccoun"
+    , displayText : "Github"
+    , className' : "fa fa-github"
+    }
+
+linkedinIcon :: PersonalLinkIcon
+linkedinIcon = 
+    { srcUrl : "https://www.linkedin.com/in/steven-maccoun-b4448b38/"
+    , displayText : "Linkedin"
+    , className' : "fa fa-linkedin"
+    }
+
+
+personalLinkIcon :: forall t3 t4. PersonalLinkIcon -> HH.HTML t4 t3 
+personalLinkIcon {srcUrl, displayText, className'} = 
+  HH.a
+    [ HP.href srcUrl, style do paddingLeft (pxS 10) ]
+    [ HH.i 
+       [HP.class_ (H.ClassName className'), style do fontSize (pxS 50)] 
+       []
+    ]
+  where
+    pxS i = px $ toNumber i
 
 
 

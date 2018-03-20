@@ -1,5 +1,6 @@
 "use strict";
 var CSS = require("../CSS");
+var CSS_Font = require("../CSS.Font");
 var CSS_Geometry = require("../CSS.Geometry");
 var CSS_Property = require("../CSS.Property");
 var CSS_Render = require("../CSS.Render");
@@ -40,12 +41,12 @@ var ToggleState = (function () {
     return ToggleState;
 })();
 var style = (function () {
-    var toString = function ($8) {
+    var toString = function ($13) {
         return Data_String.joinWith("; ")(Data_StrMap.foldMap(Data_Monoid.monoidArray)(function (key) {
             return function (val) {
                 return [ key + (": " + val) ];
             };
-        })($8));
+        })($13));
     };
     var rights = Data_Array.concatMap(Data_Foldable.foldMap(Data_Either.foldableEither)(Data_Monoid.monoidArray)(Data_Array.singleton));
     var property = function (v) {
@@ -55,29 +56,40 @@ var style = (function () {
         return Data_Maybe.Nothing.value;
     };
     var rules = function (rs) {
-        var properties = Control_Bind.bind(Control_Bind.bindArray)(Data_Array.mapMaybe(property)(rs))(function ($9) {
-            return rights(CSS_Render.collect($9));
+        var properties = Control_Bind.bind(Control_Bind.bindArray)(Data_Array.mapMaybe(property)(rs))(function ($14) {
+            return rights(CSS_Render.collect($14));
         });
         return Data_StrMap.fromFoldable(Data_Foldable.foldableArray)(properties);
     };
-    return function ($10) {
-        return Halogen_HTML_Properties.attr("style")(toString(rules(CSS_Stylesheet.runS($10))));
+    return function ($15) {
+        return Halogen_HTML_Properties.attr("style")(toString(rules(CSS_Stylesheet.runS($15))));
     };
 })();
-var personalLinkView = function (srcUrl) {
-    return function (displayText) {
-        return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(srcUrl), style(CSS_Geometry.paddingLeft(CSS_Size.px(Data_Int.toNumber(10)))) ])([ Halogen_HTML_Core.text(displayText) ]);
+var personalLinkIcon = function (v) {
+    var pxS = function (i) {
+        return CSS_Size.px(Data_Int.toNumber(i));
     };
+    return Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href(v.srcUrl), style(CSS_Geometry.paddingLeft(pxS(10))) ])([ Halogen_HTML_Elements.i([ Halogen_HTML_Properties.class_(v["className'"]), style(CSS_Font.fontSize(pxS(50))) ])([  ]) ]);
+};
+var linkedinIcon = {
+    srcUrl: "https://www.linkedin.com/in/steven-maccoun-b4448b38/",
+    displayText: "Linkedin",
+    "className'": "fa fa-linkedin"
+};
+var githubLinkIcon = {
+    srcUrl: "https://github.com/smaccoun",
+    displayText: "Github",
+    "className'": "fa fa-github"
 };
 var component = (function () {
     var render = function (state) {
         return Halogen_HTML_Elements.div_([ Halogen_HTML_Elements.div([ Halogen_HTML_Events.onClick(Halogen_HTML_Events.input_(ToggleState.create)) ])([ (function () {
-            var $5 = !state.on;
-            if ($5) {
+            var $10 = !state.on;
+            if ($10) {
                 return Halogen_HTML_Elements.h1_([ Halogen_HTML_Core.text("Welcome!") ]);
             };
             return Halogen_HTML_Elements.img([ Halogen_HTML_Properties.src("../images/raccoon-icon.png") ]);
-        })() ]), Halogen_HTML_Elements.a([ Halogen_HTML_Properties.href("https://www.linkedin.com/in/steven-maccoun-b4448b38/") ])([ Halogen_HTML_Core.text("Linkedin") ]), personalLinkView("https://github.com/smaccoun")("Github") ]);
+        })() ]), personalLinkIcon(linkedinIcon), personalLinkIcon(githubLinkIcon) ]);
     };
     var initialState = {
         on: false
@@ -101,6 +113,8 @@ var component = (function () {
 module.exports = {
     ToggleState: ToggleState,
     component: component,
-    personalLinkView: personalLinkView,
+    githubLinkIcon: githubLinkIcon,
+    linkedinIcon: linkedinIcon,
+    personalLinkIcon: personalLinkIcon,
     style: style
 };
